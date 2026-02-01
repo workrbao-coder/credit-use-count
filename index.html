@@ -17,24 +17,30 @@
         .shop-btn { flex: 1; padding: 10px; border: none; border-radius: 7px; cursor: pointer; font-weight: bold; background: transparent; transition: 0.3s; font-size: 1rem; }
         .shop-btn.active { background: white; color: var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         
-        /* 統計面板網格 */
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .stat-card { padding: 12px; border-radius: 10px; text-align: center; border: 1px solid #eee; }
-        .stat-card.full { grid-column: span 2; background: #e8f0fe; border-color: #d2e3fc; }
-        .stat-card.year { background: #f1f3f4; }
+        /* 1+1+2 統計排版 */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .stat-card { padding: 15px; border-radius: 12px; text-align: center; border: 1px solid #eee; display: flex; flex-direction: column; justify-content: center; }
+        .stat-full-width { grid-column: span 2; }
+        
+        .stat-card.full { background: #e8f0fe; border-color: #d2e3fc; }
+        .stat-card.year { background: #f1f3f4; border-color: #dadce0; }
         .stat-card.peak { border-top: 4px solid var(--peak); background: #fff5f5; }
         .stat-card.off { border-top: 4px solid var(--off); background: #f5fff8; }
-        .stat-label { font-size: 0.75rem; color: #5f6368; margin-bottom: 4px; font-weight: bold; }
-        .stat-value { font-size: 1.4rem; font-weight: bold; color: #1967d2; }
-        .stat-card.peak .stat-value { color: var(--peak); }
-        .stat-card.off .stat-value { color: var(--off); }
 
+        .stat-label { font-size: 0.85rem; color: #5f6368; margin-bottom: 6px; font-weight: bold; }
+        .stat-value { font-size: 1.8rem; font-weight: bold; color: #1967d2; }
+        .stat-card.peak .stat-value { color: var(--peak); font-size: 1.4rem; }
+        .stat-card.off .stat-value { color: var(--off); font-size: 1.4rem; }
+
+        /* 輸入區 */
         .control-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
         select { padding: 6px 12px; border-radius: 6px; border: 1px solid #ccc; font-size: 1rem; background: white; }
-        textarea { width: 100%; height: 100px; padding: 12px; border: 2px solid #eaeeef; border-radius: 10px; box-sizing: border-box; font-size: 16px; resize: none; }
+        textarea { width: 100%; height: 100px; padding: 12px; border: 2px solid #eaeeef; border-radius: 10px; box-sizing: border-box; font-size: 16px; resize: none; transition: 0.3s; }
+        textarea:focus { border-color: var(--primary); outline: none; }
         .status { font-size: 0.7rem; color: #34a853; text-align: right; height: 15px; margin-top: 5px; font-weight: bold; }
         
-        .tag-container { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; max-height: 150px; overflow-y: auto; }
+        /* 歷史標籤 */
+        .tag-container { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; max-height: 200px; overflow-y: auto; padding: 5px; }
         .day-tag { background: #f1f3f4; color: #3c4043; padding: 4px 10px; border-radius: 6px; font-size: 0.85rem; border: 1px solid #dadce0; }
         .section-title { font-size: 0.85rem; font-weight: bold; color: #70757a; margin-top: 15px; border-left: 3px solid var(--primary); padding-left: 8px; }
     </style>
@@ -48,21 +54,21 @@
     </div>
 
     <div class="stats-grid">
-        <div class="stat-card full">
-            <div class="stat-label">全期總平均</div>
-            <div class="stat-value"><span id="avg-full">0</span> <small>天</small></div>
+        <div class="stat-card full stat-full-width">
+            <div class="stat-label">📊 全期總平均頻率</div>
+            <div class="stat-value"><span id="avg-full">0</span> <small style="font-size: 1rem;">天</small></div>
         </div>
-        <div class="stat-card year">
-            <div class="stat-label"><span id="current-year-label">當前</span>年份平均</div>
-            <div class="stat-value"><span id="avg-year">0</span> <small>天</small></div>
+        <div class="stat-card year stat-full-width">
+            <div class="stat-label">📅 <span id="current-year-label">2026</span> 年平均</div>
+            <div class="stat-value"><span id="avg-year">0</span> <small style="font-size: 1rem;">天</small></div>
         </div>
         <div class="stat-card peak">
-            <div class="stat-label">旺季平均 (7-1月)</div>
-            <div class="stat-value"><span id="avg-peak">0</span> <small>天</small></div>
+            <div class="stat-label">🔥 旺季 (7-1月)</div>
+            <div class="stat-value"><span id="avg-peak">0</span> <small style="font-size: 0.9rem;">天</small></div>
         </div>
         <div class="stat-card off">
-            <div class="stat-label">淡季平均 (2-6月)</div>
-            <div class="stat-value"><span id="avg-off">0</span> <small>天</small></div>
+            <div class="stat-label">🍀 淡季 (2-6月)</div>
+            <div class="stat-value"><span id="avg-off">0</span> <small style="font-size: 0.9rem;">天</small></div>
         </div>
     </div>
 
@@ -71,10 +77,10 @@
         <select id="yearSelect" onchange="loadCurrentInput()"></select>
     </div>
     
-    <textarea id="dateInput" placeholder="輸入 1/5, 1/20..." oninput="handleInput()"></textarea>
-    <div id="saveStatus" class="status">連線中...</div>
+    <textarea id="dateInput" placeholder="輸入日期例如：1/5, 1/20..." oninput="handleInput()"></textarea>
+    <div id="saveStatus" class="status">雲端連線中...</div>
 
-    <div class="section-title">該店完整紀錄 (由新到舊)</div>
+    <div class="section-title">更換紀錄 (由新到舊)</div>
     <div id="daysContainer" class="tag-container"></div>
 </div>
 
@@ -110,13 +116,15 @@
       if (y === thisYear) opt.selected = true;
       yearSelect.appendChild(opt);
   }
+  document.getElementById('current-year-label').innerText = thisYear;
 
+  // 監聽 Firebase 資料
   onValue(ref(db, 'shops/'), (snapshot) => {
       const data = snapshot.val();
       if (data) {
           allData = data;
           updateUI();
-          document.getElementById('saveStatus').innerText = "雲端資料已同步";
+          document.getElementById('saveStatus').innerText = "雲端同步成功";
       }
   });
 
@@ -142,7 +150,7 @@
       clearTimeout(debounceTimer);
       debounceTimer = setTimeout(() => {
           set(ref(db, `shops/${currentShop}/${year}`), text)
-            .then(() => document.getElementById('saveStatus').innerText = "已儲存至雲端");
+            .then(() => document.getElementById('saveStatus').innerText = "已安全儲存");
       }, 800);
       calculateAndRender();
   };
@@ -156,10 +164,8 @@
   function calculateAndRender() {
       const shopObj = allData[currentShop] || {};
       const selectedYear = yearSelect.value;
-      
       let allDates = [];
       
-      // 1. 解析所有日期
       for (let year in shopObj) {
           const lines = shopObj[year].split(/[\n,，、\s]+/).filter(d => d.includes('/'));
           lines.forEach(dStr => {
@@ -171,38 +177,30 @@
           });
       }
 
-      // 排序：由新到舊
       allDates.sort((a, b) => b.date - a.date);
 
-      // 2. 計算各項指標
       let stats = {
           full: { total: 0, count: 0 },
           year: { total: 0, count: 0 },
-          peak: { total: 0, count: 0 }, // 7, 8, 9, 10, 11, 12, 1
-          off: { total: 0, count: 0 }    // 2, 3, 4, 5, 6
+          peak: { total: 0, count: 0 },
+          off: { total: 0, count: 0 }
       };
 
       const container = document.getElementById('daysContainer');
       container.innerHTML = "";
 
       for (let i = 0; i < allDates.length - 1; i++) {
-          const newDate = allDates[i];
-          const oldDate = allDates[i+1];
-          const diff = Math.round((newDate.date - oldDate.date) / 86400000);
-
+          const diff = Math.round((allDates[i].date - allDates[i+1].date) / 86400000);
           if (diff > 0) {
-              // 全期
               stats.full.total += diff;
               stats.full.count++;
 
-              // 當前選中年份 (以換紙當下的年份計算)
-              if (newDate.year === selectedYear) {
+              if (allDates[i].year === selectedYear) {
                   stats.year.total += diff;
                   stats.year.count++;
               }
 
-              // 季節判定 (以換紙當下的月份判定該捲屬於什麼季節)
-              const m = newDate.month;
+              const m = allDates[i].month;
               if (m === 1 || m >= 7) {
                   stats.peak.total += diff;
                   stats.peak.count++;
@@ -210,13 +208,10 @@
                   stats.off.total += diff;
                   stats.off.count++;
               }
-
-              // 顯示標籤
               container.innerHTML += `<span class="day-tag">${diff}天</span>`;
           }
       }
 
-      // 3. 更新介面
       const getAvg = (s) => s.count > 0 ? (s.total / s.count).toFixed(1) : "0";
       document.getElementById('avg-full').innerText = getAvg(stats.full);
       document.getElementById('avg-year').innerText = getAvg(stats.year);
