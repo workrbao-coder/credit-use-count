@@ -4,9 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>簽單耗材統計 PWA</title>
+    
+    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/1041/1041888.png">
+    
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1a73e8">
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1041/1041888.png">
+    
     <style>
         :root { --primary: #1a73e8; --bg: #f8f9fa; --peak: #e74c3c; --off: #27ae60; }
         body { font-family: -apple-system, sans-serif; background-color: var(--bg); display: flex; justify-content: center; padding: 15px; margin: 0; }
@@ -106,7 +110,6 @@
   let allData = { neihu: {}, ruiguang: {} };
   let debounceTimer;
 
-  // 初始化年份選單
   const yearSelect = document.getElementById('yearSelect');
   const thisYear = new Date().getFullYear();
   for (let y = 2030; y >= 2022; y--) {
@@ -118,7 +121,6 @@
   }
   document.getElementById('current-year-label').innerText = thisYear;
 
-  // 監聽 Firebase 資料
   onValue(ref(db, 'shops/'), (snapshot) => {
       const data = snapshot.val();
       if (data) {
